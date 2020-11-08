@@ -193,7 +193,11 @@ static int pd_load_map(const char *file)
 	return 0;
 }
 
+#ifndef ANDROID
 #define FIRMWARE_BASE	"/lib/firmware/"
+#else
+#define FIRMWARE_BASE	"/vendor/firmware/"
+#endif
 
 static int pd_enumerate_jsons(struct assoc *json_set)
 {
@@ -241,6 +245,8 @@ static int pd_enumerate_jsons(struct assoc *json_set)
 		if (n < 0) {
 			continue;
 		}
+
+		firmware_value[n] = '\0';
 
 		if (strlen(FIRMWARE_BASE) + strlen(firmware_value) + 1 > sizeof(path))
 			continue;
@@ -300,7 +306,7 @@ static int pd_load_maps(void)
 	return ret;
 }
 
-int main(int argc, char **argv)
+int main(int argc __unused, char **argv __unused)
 {
 	struct sockaddr_qrtr sq;
 	struct qrtr_packet pkt;
